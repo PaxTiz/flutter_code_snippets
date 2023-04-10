@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/widgets.dart';
 
+import '../constants.dart';
 import '../models/snippet.dart';
 import '../stores/current_snippet.dart';
 
 class Sidebar extends ConsumerStatefulWidget {
-  const Sidebar({super.key});
+  final double? width;
+
+  const Sidebar({super.key, required this.width});
 
   @override
   createState() => _Sidebar();
@@ -36,72 +39,77 @@ class _Sidebar extends ConsumerState<Sidebar> {
     final currentSnippet = ref.watch(currentSnippetProvider);
 
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 328),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: 200,
-                  child: TextField(
-                    onChanged: (value) => setState(() => _search = value),
-                    decoration: const InputDecoration(hintText: 'Search..'),
+      constraints: const BoxConstraints(
+        minWidth: kSidebarMaxWidth,
+      ),
+      child: SizedBox(
+        width: widget.width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 200,
+                    child: TextField(
+                      onChanged: (value) => setState(() => _search = value),
+                      decoration: const InputDecoration(hintText: 'Search..'),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                SizedBox(
-                  width: 100,
-                  child: YaruPopupMenuButton(
-                    initialValue: null,
-                    child: Text(_language?.view() ?? 'All'),
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: null,
-                        height: 32,
-                        child: const Text('All'),
-                        onTap: () => setState(() => _language = null),
-                      ),
-                      ...Language.values
-                          .map(
-                            (e) => PopupMenuItem<Language>(
-                              value: e,
-                              height: 32,
-                              child: Text(e.view()),
-                              onTap: () => setState(() => _language = e),
-                            ),
-                          )
-                          .toList()
-                    ],
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: 100,
+                    child: YaruPopupMenuButton(
+                      initialValue: null,
+                      child: Text(_language?.view() ?? 'All'),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: null,
+                          height: 32,
+                          child: const Text('All'),
+                          onTap: () => setState(() => _language = null),
+                        ),
+                        ...Language.values
+                            .map(
+                              (e) => PopupMenuItem<Language>(
+                                value: e,
+                                height: 32,
+                                child: Text(e.view()),
+                                onTap: () => setState(() => _language = e),
+                              ),
+                            )
+                            .toList()
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          if (snippets.isEmpty)
-            const ListTile(dense: true, title: Text('No results found')),
-          if (snippets.isNotEmpty)
-            ...snippets
-                .map(
-                  (e) => ListTile(
-                    dense: true,
-                    enabled: true,
-                    onTap: () => onSnippetSelected(e),
-                    title: Text(e.name),
-                    selected: isSelected(currentSnippet, e),
-                    trailing: Badge(label: Text(e.language.view())),
-                  ),
-                )
-                .toList(),
-          Expanded(
-            child: GestureDetector(
-              onTap: () => onSnippetSelected(null),
-            ),
-          )
-        ],
+            if (snippets.isEmpty)
+              const ListTile(dense: true, title: Text('No results found')),
+            if (snippets.isNotEmpty)
+              ...snippets
+                  .map(
+                    (e) => ListTile(
+                      dense: true,
+                      enabled: true,
+                      onTap: () => onSnippetSelected(e),
+                      title: Text(e.name),
+                      selected: isSelected(currentSnippet, e),
+                      trailing: Badge(label: Text(e.language.view())),
+                    ),
+                  )
+                  .toList(),
+            Expanded(
+              child: GestureDetector(
+                onTap: () => onSnippetSelected(null),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
