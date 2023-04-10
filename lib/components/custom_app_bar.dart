@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
 import '../models/snippet.dart';
+import '../stores/code_editor.dart';
 import '../stores/current_snippet.dart';
 
 class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
@@ -33,6 +34,18 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
           ? []
           : [
               YaruIconButton(
+                icon: const Icon(Icons.text_decrease_rounded),
+                onPressed: () => ref.read(codeEditorProvider.notifier).decrement(),
+              ),
+              YaruIconButton(
+                icon: const Icon(Icons.text_increase_rounded),
+                onPressed: () => ref.read(codeEditorProvider.notifier).increment(),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: VerticalDivider(width: 2),
+              ),
+              YaruIconButton(
                 icon: const Icon(Icons.share),
                 onPressed: () => notImplemented(context),
               ),
@@ -41,7 +54,7 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 onPressed: () => notImplemented(context),
               ),
               YaruIconButton(
-                icon: const Icon(Icons.delete),
+                icon: const Icon(Icons.delete, color: Colors.red),
                 onPressed: () => notImplemented(context),
               ),
             ],

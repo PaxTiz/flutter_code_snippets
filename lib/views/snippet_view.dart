@@ -3,6 +3,7 @@ import 'package:any_syntax_highlighter/themes/any_syntax_highlighter_theme_colle
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../stores/code_editor.dart';
 import '../stores/current_snippet.dart';
 
 class SnippetView extends ConsumerWidget {
@@ -11,6 +12,7 @@ class SnippetView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentSnippet = ref.watch(currentSnippetProvider);
+    final editorConfig = ref.watch(codeEditorProvider);
 
     return currentSnippet == null
         ? const Expanded(
@@ -43,7 +45,7 @@ class SnippetView extends ConsumerWidget {
                       children: [
                         AnySyntaxHighlighter(
                           '\n${currentSnippet.code}',
-                          fontSize: 12,
+                          fontSize: editorConfig.fontSize,
                           softWrap: true,
                           lineNumbers: true,
                           hasCopyButton: true,
