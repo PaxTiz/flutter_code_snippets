@@ -7,6 +7,11 @@ import '../stores/current_snippet.dart';
 class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
 
+  void notImplemented(BuildContext context) {
+    const snackbar = SnackBar(content: Text('Warning: Not yet implemented'));
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentSnippet = ref.watch(currentSnippetProvider);
@@ -18,15 +23,15 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
           : [
               YaruIconButton(
                 icon: const Icon(Icons.share),
-                onPressed: () {},
+                onPressed: () => notImplemented(context),
               ),
               YaruIconButton(
                 icon: const Icon(Icons.edit),
-                onPressed: () {},
+                onPressed: () => notImplemented(context),
               ),
               YaruIconButton(
                 icon: const Icon(Icons.delete),
-                onPressed: () {},
+                onPressed: () => notImplemented(context),
               ),
             ],
     );
