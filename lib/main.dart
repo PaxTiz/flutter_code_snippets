@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:search_engine/components/custom_app_bar.dart';
 import 'package:search_engine/components/sidebar.dart';
 import 'package:search_engine/models/snippet.dart';
 import 'package:search_engine/views/snippet_view.dart';
@@ -45,23 +46,7 @@ class _MyHomePage extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: YaruWindowTitleBar(
-        title: const Text('My app bar'),
-        actions: [
-          YaruIconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () {},
-          ),
-          YaruIconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {},
-          ),
-          YaruIconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {},
-          ),
-        ],
-      ),
+      appBar: CustomAppBar(snippet: _currentSnippet),
       body: Row(
         children: [
           Sidebar(
