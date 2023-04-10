@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:search_engine/models/snippet.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/widgets.dart';
 
-class Sidebar extends StatefulWidget {
-  final Snippet? snippet;
-  final ValueSetter<Snippet?> onChange;
+import '../models/snippet.dart';
+import '../stores/current_snippet.dart';
 
-  const Sidebar({
-    super.key,
-    required this.snippet,
-    required this.onChange,
-  });
+class Sidebar extends ConsumerStatefulWidget {
+  const Sidebar({super.key});
 
   @override
   createState() => _Sidebar();
 }
 
-class _Sidebar extends State<Sidebar> {
+class _Sidebar extends ConsumerState<Sidebar> {
   String _search = '';
   Language? _language;
 
@@ -25,14 +21,20 @@ class _Sidebar extends State<Sidebar> {
         return _language == null ? filter : filter && e.language == _language;
       });
 
-  bool isSelected(Snippet snippet) {
-    return widget.snippet != null &&
-        widget.snippet?.name == snippet.name &&
-        widget.snippet?.language == snippet.language;
+  bool isSelected(Snippet? currentSnippet, Snippet snippet) {
+    return currentSnippet != null &&
+        currentSnippet.name == snippet.name &&
+        currentSnippet.language == snippet.language;
+  }
+
+  void onSnippetSelected(Snippet? snippet) {
+    ref.read(currentSnippetProvider.notifier).state = snippet;
   }
 
   @override
   Widget build(BuildContext context) {
+    final currentSnippet = ref.watch(currentSnippetProvider);
+
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 328),
       child: Column(
@@ -55,7 +57,7 @@ class _Sidebar extends State<Sidebar> {
                   width: 100,
                   child: YaruPopupMenuButton(
                     initialValue: null,
-                    child: Text(_language?.view() ?? "All"),
+                    child: Text(_language?.view() ?? 'All'),
                     itemBuilder: (context) => [
                       PopupMenuItem(
                         value: null,
@@ -87,16 +89,16 @@ class _Sidebar extends State<Sidebar> {
                   (e) => ListTile(
                     dense: true,
                     enabled: true,
-                    onTap: () => widget.onChange(e),
+                    onTap: () => onSnippetSelected(e),
                     title: Text(e.name),
-                    selected: isSelected(e),
+                    selected: isSelected(currentSnippet, e),
                     trailing: Badge(label: Text(e.language.view())),
                   ),
                 )
                 .toList(),
           Expanded(
             child: GestureDetector(
-              onTap: () => widget.onChange(null),
+              onTap: () => onSnippetSelected(null),
             ),
           )
         ],

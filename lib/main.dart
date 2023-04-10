@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:search_engine/components/custom_app_bar.dart';
-import 'package:search_engine/components/sidebar.dart';
-import 'package:search_engine/models/snippet.dart';
-import 'package:search_engine/views/snippet_view.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/widgets.dart';
+
+import 'components/custom_app_bar.dart';
+import 'components/sidebar.dart';
+import 'views/snippet_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,48 +21,33 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return YaruTheme(
-      builder: (context, yaru, child) {
-        return MaterialApp(
-          darkTheme: yaru.darkTheme,
-          themeMode: ThemeMode.dark,
-          debugShowCheckedModeBanner: false,
-          home: const MyHomePage(),
-        );
-      },
+    return ProviderScope(
+      child: YaruTheme(
+        builder: (context, yaru, child) {
+          return MaterialApp(
+            darkTheme: yaru.darkTheme,
+            themeMode: ThemeMode.dark,
+            debugShowCheckedModeBanner: false,
+            home: const MyHomePage(),
+          );
+        },
+      ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
-
-  @override
-  createState() => _MyHomePage();
-}
-
-class _MyHomePage extends State<MyHomePage> {
-  Snippet? _currentSnippet;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(snippet: _currentSnippet),
+      appBar: const CustomAppBar(),
       body: Row(
-        children: [
-          Sidebar(
-            snippet: _currentSnippet,
-            onChange: (snippet) => setState(() => _currentSnippet = snippet),
-          ),
-          const VerticalDivider(width: 2),
-          _currentSnippet == null
-              ? const Expanded(
-                  child: Center(
-                    child: Text(
-                        'Please select a snippet to view the code and examples'),
-                  ),
-                )
-              : SnippetView(snippet: _currentSnippet!),
+        children: const [
+          Sidebar(),
+          VerticalDivider(width: 2),
+          SnippetView(),
         ],
       ),
     );

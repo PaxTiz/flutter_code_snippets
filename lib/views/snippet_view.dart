@@ -1,59 +1,66 @@
 import 'package:any_syntax_highlighter/any_syntax_highlighter.dart';
 import 'package:any_syntax_highlighter/themes/any_syntax_highlighter_theme_collection.dart';
 import 'package:flutter/material.dart';
-import 'package:search_engine/models/snippet.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SnippetView extends StatelessWidget {
-  final Snippet snippet;
+import '../stores/current_snippet.dart';
 
-  const SnippetView({
-    super.key,
-    required this.snippet,
-  });
+class SnippetView extends ConsumerWidget {
+  const SnippetView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: DefaultTabController(
-        length: 2,
-        initialIndex: 0,
-        child: Column(
-          children: [
-            const TabBar(
-              tabs: [
-                Padding(
-                  padding: EdgeInsets.all(12.0),
-                  child: Text('Code'),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(12.0),
-                  child: Text('Example'),
-                ),
-              ],
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentSnippet = ref.watch(currentSnippetProvider);
+
+    return currentSnippet == null
+        ? const Expanded(
+            child: Center(
+              child:
+                  Text('Please select a snippet to view the code and examples'),
             ),
-            Expanded(
-              child: TabBarView(
-                physics: const NeverScrollableScrollPhysics(),
+          )
+        : Expanded(
+            child: DefaultTabController(
+              length: 2,
+              initialIndex: 0,
+              child: Column(
                 children: [
-                  AnySyntaxHighlighter(
-                    '\n${snippet.code}',
-                    fontSize: 12,
-                    softWrap: true,
-                    lineNumbers: true,
-                    hasCopyButton: true,
-                    isSelectableText: true,
-                    theme: AnySyntaxHighlighterThemeCollection.githubWebTheme(),
-                    useGoogleFont: 'JetBrains Mono',
+                  const TabBar(
+                    tabs: [
+                      Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Text('Code'),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Text('Example'),
+                      ),
+                    ],
                   ),
-                  const Center(
-                    child: Text('Tab #2'),
+                  Expanded(
+                    child: TabBarView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        AnySyntaxHighlighter(
+                          '\n${currentSnippet.code}',
+                          fontSize: 12,
+                          softWrap: true,
+                          lineNumbers: true,
+                          hasCopyButton: true,
+                          isSelectableText: true,
+                          theme: AnySyntaxHighlighterThemeCollection
+                              .githubWebTheme(),
+                          useGoogleFont: 'JetBrains Mono',
+                        ),
+                        const Center(
+                          child: Text('Tab #2'),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 }

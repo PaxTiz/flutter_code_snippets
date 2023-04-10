@@ -37,6 +37,7 @@ dependencies:
   yaru: ^0.6.2
   yaru_widgets: ^2.3.1
   any_syntax_highlighter: ^0.0.13
+  flutter_riverpod: ^2.3.4
 
 dev_dependencies:
   flutter_test:

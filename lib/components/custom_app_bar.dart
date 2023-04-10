@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:search_engine/models/snippet.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final Snippet? snippet;
+import '../stores/current_snippet.dart';
 
-  const CustomAppBar({
-    super.key,
-    required this.snippet,
-  });
+class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
+  const CustomAppBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentSnippet = ref.watch(currentSnippetProvider);
+
     return YaruWindowTitleBar(
       title: const Text('My app bar'),
-      actions: snippet == null
+      actions: currentSnippet == null
           ? []
           : [
               YaruIconButton(
