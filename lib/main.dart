@@ -4,6 +4,7 @@ import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/widgets.dart';
 
 import 'components/custom_app_bar.dart';
+import 'components/resizable_widget.dart';
 import 'components/sidebar.dart';
 import 'constants.dart';
 import 'views/snippet_view.dart';
@@ -47,11 +48,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   double _sidebarWidth = kSidebarMaxWidth;
 
-  void _onResize(DragUpdateDetails details) {
+  void _onResize(double width) {
     final windowWidth = MediaQuery.of(context).size.width / 2;
-    final sidebarWidth = details.globalPosition.dx;
-    if (sidebarWidth <= windowWidth) {
-      setState(() => _sidebarWidth = sidebarWidth);
+    if (width <= windowWidth) {
+      setState(() => _sidebarWidth = width);
     }
   }
 
@@ -61,13 +61,9 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: const CustomAppBar(),
       body: Row(
         children: [
-          Sidebar(width: _sidebarWidth),
-          MouseRegion(
-            cursor: SystemMouseCursors.resizeColumn,
-            child: GestureDetector(
-              onPanUpdate: _onResize,
-              child: const VerticalDivider(width: 2),
-            ),
+          ResizableWidget(
+            onDrag: _onResize,
+            child: Sidebar(width: _sidebarWidth),
           ),
           const SnippetView(),
         ],
