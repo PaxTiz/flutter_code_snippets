@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
+import '../models/snippet.dart';
 import '../stores/current_snippet.dart';
 
 class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
@@ -16,8 +17,18 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentSnippet = ref.watch(currentSnippetProvider);
 
+    String appTitle() {
+      String appTitle = 'Koddy';
+      if (currentSnippet != null) {
+        appTitle += ' - ${currentSnippet.name}';
+        appTitle += ' (${currentSnippet.language.view()})';
+      }
+
+      return appTitle;
+    }
+
     return YaruWindowTitleBar(
-      title: const Text('My app bar'),
+      title: Text(appTitle()),
       actions: currentSnippet == null
           ? []
           : [
