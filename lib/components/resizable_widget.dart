@@ -41,7 +41,19 @@ class _ResizableWidget extends State<ResizableWidget> {
           ? SystemMouseCursors.resizeColumn
           : SystemMouseCursors.resizeRow,
       child: GestureDetector(
-        onPanUpdate: (e) => widget.onDrag(e.globalPosition.dx),
+        onPanUpdate: (e) {
+          if (widget.indicatorPosition.isHorizontal()) {
+            final position = e.globalPosition.dx;
+            if (position > 0 && position < MediaQuery.of(context).size.width) {
+              widget.onDrag(position);
+            }
+          } else {
+            final position = e.globalPosition.dy;
+            if (position > 0 && position < MediaQuery.of(context).size.height) {
+              widget.onDrag(position);
+            }
+          }
+        },
         child: VerticalDivider(
           width: 2,
           thickness: 2,
