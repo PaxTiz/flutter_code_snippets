@@ -5,6 +5,7 @@ import 'package:yaru_widgets/widgets.dart';
 import '../constants.dart';
 import '../models/snippet.dart';
 import '../stores/current_snippet.dart';
+import 'modals/snippets/create_snippet_modal.dart';
 
 class Sidebar extends ConsumerStatefulWidget {
   final double? width;
@@ -19,19 +20,26 @@ class _Sidebar extends ConsumerState<Sidebar> {
   String _search = '';
   Language? _language;
 
-  Iterable<Snippet> get snippets => kSnippets.where((e) {
+  Iterable<Snippet> get _snippets => kSnippets.where((e) {
         final filter = e.name.toLowerCase().contains(_search.toLowerCase());
         return _language == null ? filter : filter && e.language == _language;
       });
 
-  bool isSelected(Snippet? currentSnippet, Snippet snippet) {
+  bool _isSelected(Snippet? currentSnippet, Snippet snippet) {
     return currentSnippet != null &&
         currentSnippet.name == snippet.name &&
         currentSnippet.language == snippet.language;
   }
 
-  void onSnippetSelected(Snippet? snippet) {
+  void _onSnippetSelected(Snippet? snippet) {
     ref.read(currentSnippetProvider.notifier).state = snippet;
+  }
+
+  void _showNewSnippetModal() {
+    showDialog(
+      context: context,
+      builder: (_) => const CreateSnippetModal(),
+    );
   }
 
   @override
@@ -88,26 +96,35 @@ class _Sidebar extends ConsumerState<Sidebar> {
                 ],
               ),
             ),
-            if (snippets.isEmpty)
+            if (_snippets.isEmpty)
               const ListTile(dense: true, title: Text('No results found')),
-            if (snippets.isNotEmpty)
-              ...snippets
+            if (_snippets.isNotEmpty)
+              ..._snippets
                   .map(
                     (e) => ListTile(
                       dense: true,
                       enabled: true,
-                      onTap: () => onSnippetSelected(e),
+                      onTap: () => _onSnippetSelected(e),
                       title: Text(e.name),
-                      selected: isSelected(currentSnippet, e),
+                      selected: _isSelected(currentSnippet, e),
                       trailing: Badge(label: Text(e.language.view())),
                     ),
                   )
                   .toList(),
             Expanded(
               child: GestureDetector(
-                onTap: () => onSnippetSelected(null),
+                onTap: () => _onSnippetSelected(null),
               ),
-            )
+            ),
+            Container(
+              width: kSidebarMaxWidth,
+              padding: const EdgeInsets.all(10),
+              child: ElevatedButton.icon(
+                onPressed: _showNewSnippetModal,
+                icon: const Icon(Icons.add),
+                label: const Text('New'),
+              ),
+            ),
           ],
         ),
       ),
