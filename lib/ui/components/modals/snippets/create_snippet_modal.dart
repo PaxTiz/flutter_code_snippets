@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
 
-import '../../../core/dto/snippet/create_snippet.dart';
-import '../../../core/services/snippet_service.dart';
-import '../../../models/snippet.dart';
+import '../../../../core/dto/snippet/create_snippet.dart';
+import '../../../../core/models/snippet.dart';
+import '../../../../core/services/snippet_service.dart';
 
 class CreateSnippetModal extends StatefulWidget {
   const CreateSnippetModal({super.key});

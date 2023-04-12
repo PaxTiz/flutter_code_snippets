@@ -3,8 +3,8 @@ import 'package:any_syntax_highlighter/themes/any_syntax_highlighter_theme_colle
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../stores/code_editor.dart';
-import '../stores/current_snippet.dart';
+import '../../core/stores/code_editor.dart';
+import '../../core/stores/current_snippet.dart';
 
 class SnippetView extends ConsumerWidget {
   const SnippetView({super.key});

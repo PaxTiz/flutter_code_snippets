@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru_widgets/widgets.dart';
 
-import '../constants.dart';
-import '../models/snippet.dart';
-import '../stores/current_snippet.dart';
+import '../../constants.dart';
+import '../../core/models/snippet.dart';
+import '../../core/stores/current_snippet.dart';
 import 'modals/snippets/create_snippet_modal.dart';
 
 class Sidebar extends ConsumerStatefulWidget {

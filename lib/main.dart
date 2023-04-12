@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/widgets.dart';
 
-import 'components/custom_app_bar.dart';
-import 'components/resizable_widget.dart';
-import 'components/sidebar.dart';
 import 'constants.dart';
-import 'views/snippet_view.dart';
+import 'ui/components/custom_app_bar.dart';
+import 'ui/components/resizable_widget.dart';
+import 'ui/components/sidebar.dart';
+import 'ui/views/snippet_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
